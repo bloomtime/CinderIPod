@@ -75,11 +75,13 @@ public:
     size_t size(){ return [[m_collection items] count ]; };
 
     MPMediaItemCollection* getMediaItemCollection();
+    MPMediaItem* getRepresentativeItem();
 
 //    vector<TrackRef> m_tracks;
 	
 private:
 	
+	MPMediaItem *m_representative_item;
 	MPMediaItemCollection *m_collection;
 
 };

@@ -60,12 +60,15 @@ double Track::getLength()
 Surface Track::getArtwork(const Vec2i &size)
 {
     MPMediaItemArtwork *artwork = [m_media_item valueForProperty: MPMediaItemPropertyArtwork];
-    UIImage *artwork_img = [artwork imageWithSize: CGSizeMake(size.x, size.y)];
+	
+	if (artwork) {
+		UIImage *artwork_img = [artwork imageWithSize: CGSizeMake(size.x, size.y)];
+		if(artwork_img) {
+			return cocoa::convertUiImage(artwork_img, true);
+		}
+	}
 
-    if(artwork_img)
-        return cocoa::convertUiImage(artwork_img, true);
-    else
-        return Surface();
+	return Surface();
 }
 
 
@@ -78,6 +81,8 @@ Surface Track::getArtwork(const Vec2i &size)
 Playlist::Playlist(MPMediaItemCollection *media_collection)
 {
 	m_collection = [media_collection retain];
+	m_representative_item = NULL;
+//	m_representative_item = [[m_collection representativeItem] retain];	
 //    NSArray *items = [media_collection items];
 //    for(MPMediaItem *item in items){
 //        pushTrack(new Track(item));
@@ -85,6 +90,9 @@ Playlist::Playlist(MPMediaItemCollection *media_collection)
 }
 Playlist::~Playlist()
 {
+	if (m_representative_item) {
+		[m_representative_item release];
+	}
 	[m_collection release];
 }
 
@@ -99,14 +107,20 @@ Playlist::~Playlist()
 //
 string Playlist::getAlbumTitle()
 {
-    MPMediaItem *item = [m_collection representativeItem];
-    return string([[item valueForProperty: MPMediaItemPropertyAlbumTitle] UTF8String]);
+    return string([[getRepresentativeItem() valueForProperty: MPMediaItemPropertyAlbumTitle] UTF8String]);
 }
 
 string Playlist::getArtistName()
 {
-    MPMediaItem *item = [m_collection representativeItem];
-    return string([[item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
+    return string([[getRepresentativeItem() valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
+}
+	
+MPMediaItem* Playlist::getRepresentativeItem()
+{
+	if (m_representative_item == NULL) {
+		m_representative_item = [[m_collection representativeItem] retain];
+	}
+	return m_representative_item;
 }
 
 MPMediaItemCollection* Playlist::getMediaItemCollection()
