@@ -5,15 +5,16 @@ namespace cinder { namespace ipod {
 
 // TRACK
 
-Track::Track()
-{
-}
+//Track::Track()
+//{
+//}
 Track::Track(MPMediaItem *media_item)
 {
     m_media_item = [media_item retain];
 }
 Track::~Track()
 {
+    [m_media_item release];	
 }
 
 string Track::getTitle()
@@ -71,48 +72,51 @@ Surface Track::getArtwork(const Vec2i &size)
 
 // PLAYLIST
 
-Playlist::Playlist()
-{
-}
+//Playlist::Playlist()
+//{
+//}
 Playlist::Playlist(MPMediaItemCollection *media_collection)
 {
-    NSArray *items = [media_collection items];
-    for(MPMediaItem *item in items){
-        pushTrack(new Track(item));
-    }
+	m_collection = [media_collection retain];
+//    NSArray *items = [media_collection items];
+//    for(MPMediaItem *item in items){
+//        pushTrack(new Track(item));
+//    }
 }
 Playlist::~Playlist()
 {
+	[m_collection release];
 }
 
-void Playlist::pushTrack(TrackRef track)
-{
-    m_tracks.push_back(track);
-}
-void Playlist::pushTrack(Track *track)
-{
-    m_tracks.push_back(TrackRef(track));
-}
-
+//void Playlist::pushTrack(TrackRef track)
+//{
+//    m_tracks.push_back(track);
+//}
+//void Playlist::pushTrack(Track *track)
+//{
+//    m_tracks.push_back(TrackRef(track));
+//}
+//
 string Playlist::getAlbumTitle()
 {
-    MPMediaItem *item = [getMediaItemCollection() representativeItem];
+    MPMediaItem *item = [m_collection representativeItem];
     return string([[item valueForProperty: MPMediaItemPropertyAlbumTitle] UTF8String]);
 }
 
 string Playlist::getArtistName()
 {
-    MPMediaItem *item = [getMediaItemCollection() representativeItem];
+    MPMediaItem *item = [m_collection representativeItem];
     return string([[item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
 }
 
 MPMediaItemCollection* Playlist::getMediaItemCollection()
 {
-    NSMutableArray *items = [NSMutableArray array];
-    for(Iter it = m_tracks.begin(); it != m_tracks.end(); ++it){
-        [items addObject: (*it)->getMediaItem()];
-    }
-    return [MPMediaItemCollection collectionWithItems:items];
+	return m_collection;
+//    NSMutableArray *items = [NSMutableArray array];
+//    for(Iter it = m_tracks.begin(); it != m_tracks.end(); ++it){
+//        [items addObject: (*it)->getMediaItem()];
+//    }
+//    return [MPMediaItemCollection collectionWithItems:items];
 }
 
 
@@ -200,15 +204,23 @@ PlaylistRef getArtist(uint64_t artist_id)
 	
 vector<PlaylistRef> getArtists()
 {
+	std::cout << "ipod::getArtists()" << std::endl;
+	
+	NSDate *start = [NSDate date];
+
     MPMediaQuery *query = [MPMediaQuery artistsQuery];
-
-    vector<PlaylistRef> artists;
-
     NSArray *query_groups = [query collections];
+
+	std::cout << [start timeIntervalSinceNow] << " seconds to run query" << std::endl;
+
+	start = [NSDate date];
+	
+    vector<PlaylistRef> artists;
     for(MPMediaItemCollection *group in query_groups){
-        PlaylistRef artist = PlaylistRef(new Playlist(group));
-        artists.push_back(artist);
+        artists.push_back(PlaylistRef(new Playlist(group)));
     }
+
+	std::cout << [start timeIntervalSinceNow] << " seconds to build playlist refs" << std::endl;
 
     return artists;
 }

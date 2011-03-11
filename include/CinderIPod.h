@@ -18,7 +18,7 @@ namespace cinder { namespace ipod {
 class Track {
 public:
 
-    Track();
+    //Track();
     Track(MPMediaItem *media_item);
     ~Track();
 
@@ -52,29 +52,35 @@ typedef std::shared_ptr<Track> TrackRef;
 class Playlist {
 public:
 
-    typedef vector<TrackRef>::iterator Iter;
+    //typedef vector<TrackRef>::iterator Iter;
 
-    Playlist();
+    //Playlist();
     Playlist(MPMediaItemCollection *collection);
     ~Playlist();
 
-    void pushTrack(TrackRef track);
-    void pushTrack(Track *track);
-    void popLastTrack(){ m_tracks.pop_back(); };
+//    void pushTrack(TrackRef track);
+//    void pushTrack(Track *track);
+//    void popLastTrack(){ m_tracks.pop_back(); };
 
     string getAlbumTitle();
     string getArtistName();
 
-    TrackRef operator[](const int index){ return m_tracks[index]; };
-    TrackRef firstTrack(){ return m_tracks.front(); };
-    TrackRef lastTrack(){ return m_tracks.back(); };
-    Iter   begin(){ return m_tracks.begin(); };
-    Iter   end(){ return m_tracks.end(); };
-    size_t size(){ return m_tracks.size(); };
+	TrackRef operator[](const int index){ return TrackRef(new Track([[m_collection items] objectAtIndex: index ])); };
+	
+//    TrackRef operator[](const int index){ return m_tracks[index]; };
+//    TrackRef firstTrack(){ return m_tracks.front(); };
+//    TrackRef lastTrack(){ return m_tracks.back(); };
+//    Iter   begin(){ return m_tracks.begin(); };
+//    Iter   end(){ return m_tracks.end(); };
+    size_t size(){ return [[m_collection items] count ]; };
 
     MPMediaItemCollection* getMediaItemCollection();
 
-    vector<TrackRef> m_tracks;
+//    vector<TrackRef> m_tracks;
+	
+private:
+	
+	MPMediaItemCollection *m_collection;
 
 };
 
