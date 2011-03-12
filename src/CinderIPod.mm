@@ -111,14 +111,18 @@ string Playlist::getAlbumTitle()
 }
 
 string Playlist::getArtistName()
-{
+{	
     return string([[getRepresentativeItem() valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
 }
 	
 MPMediaItem* Playlist::getRepresentativeItem()
 {
 	if (m_representative_item == NULL) {
+		std::cout << "getting representative item" << std::endl;
 		m_representative_item = [[m_collection representativeItem] retain];
+	}
+	else {
+		std::cout << "using cached representative item" << std::endl;		
 	}
 	return m_representative_item;
 }
@@ -226,7 +230,14 @@ vector<PlaylistRef> getArtists()
     NSArray *query_groups = [query collections];
 
 	std::cout << [start timeIntervalSinceNow] << " seconds to run query" << std::endl;
-
+	
+//	std::cout << "begin [query collectionSections]:" << std::endl;
+//	NSArray *sections = [query collectionSections];
+//	for (MPMediaQuerySection *section in sections) {
+//		std::cout << string([[section title] UTF8String]) << std::endl;
+//	}
+//	std::cout << "end [query collectionSections]." << std::endl;
+	
 	start = [NSDate date];
 	
     vector<PlaylistRef> artists;
@@ -235,7 +246,19 @@ vector<PlaylistRef> getArtists()
     }
 
 	std::cout << [start timeIntervalSinceNow] << " seconds to build playlist refs" << std::endl;
+	
+	start = [NSDate date];
 
+	// TODO: off in a thread with you!?
+	for(int i = 0; i < [query_groups count]; i++) {
+		MPMediaItem *rItem = [[query_groups objectAtIndex:i] representativeItem];
+		//NSString *pID = [rItem valueForProperty:MPMediaItemPropertyPersistentID];
+		//NSString *title = [rItem valueForProperty:MPMediaItemPropertyAlbumTitle];
+		NSString *artist = [rItem valueForProperty:MPMediaItemPropertyArtist];
+	}	
+	
+	std::cout << [start timeIntervalSinceNow] << " seconds to get artist names" << std::endl;
+	
     return artists;
 }
 
