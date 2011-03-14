@@ -246,8 +246,15 @@ vector<PlaylistRef> getArtists()
     }
 
 	std::cout << [start timeIntervalSinceNow] << " seconds to build playlist refs" << std::endl;
-	
+
 	start = [NSDate date];
+
+//	NSSet *properties = [NSSet setWithObjects: MPMediaItemPropertyArtist, nil];
+//	for(MPMediaItemCollection *group in query_groups){
+//		[group enumerateValuesForProperties: properties usingBlock: ^(NSString *property, id value, BOOL *stop){
+//			// ... ?
+//		}];
+//    }
 
 	// TODO: off in a thread with you!?
 	for(int i = 0; i < [query_groups count]; i++) {
