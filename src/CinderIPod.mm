@@ -59,12 +59,15 @@ double Track::getLength()
 Surface Track::getArtwork(const Vec2i &size)
 {
     MPMediaItemArtwork *artwork = [m_media_item valueForProperty: MPMediaItemPropertyArtwork];
-    UIImage *artwork_img = [artwork imageWithSize: CGSizeMake(size.x, size.y)];
+    
+    if (artwork) {
+        UIImage *artwork_img = [artwork imageWithSize: CGSizeMake(size.x, size.y)];
+        if(artwork_img) {
+            return cocoa::convertUiImage(artwork_img, true);
+        }
+    }
 
-    if(artwork_img)
-        return cocoa::convertUiImage(artwork_img, true);
-    else
-        return Surface();
+    return Surface();
 }
 
 
