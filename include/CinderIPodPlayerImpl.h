@@ -12,7 +12,7 @@ namespace cinder { namespace ipod {
 @interface CinderIPodPlayerImpl : NSObject {
 @public
     MPMusicPlayerController *m_controller;
-    MPMediaItem             *m_playing_item;
+//    MPMediaItem             *m_playing_item;
 
     cinder::ipod::Player    *m_player;
 

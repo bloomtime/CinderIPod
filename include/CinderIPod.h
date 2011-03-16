@@ -18,7 +18,6 @@ namespace cinder { namespace ipod {
 class Track {
 public:
 
-    //Track();
     Track(MPMediaItem *media_item);
     ~Track();
 
@@ -48,36 +47,23 @@ protected:
 
 typedef std::shared_ptr<Track> TrackRef;
 
-
 class Playlist {
 public:
 
-    //typedef vector<TrackRef>::iterator Iter;
-
-    //Playlist();
     Playlist(MPMediaItemCollection *collection);
     ~Playlist();
-
-//    void pushTrack(TrackRef track);
-//    void pushTrack(Track *track);
-//    void popLastTrack(){ m_tracks.pop_back(); };
 
     string getAlbumTitle();
     string getArtistName();
 
-	TrackRef operator[](const int index){ return TrackRef(new Track([[m_collection items] objectAtIndex: index ])); };
+	TrackRef operator[](const int index) { 
+        return TrackRef(new Track([[m_collection items] objectAtIndex: index ]));
+    };
 	
-//    TrackRef operator[](const int index){ return m_tracks[index]; };
-//    TrackRef firstTrack(){ return m_tracks.front(); };
-//    TrackRef lastTrack(){ return m_tracks.back(); };
-//    Iter   begin(){ return m_tracks.begin(); };
-//    Iter   end(){ return m_tracks.end(); };
     size_t size(){ return [[m_collection items] count ]; };
 
     MPMediaItemCollection* getMediaItemCollection();
     MPMediaItem* getRepresentativeItem();
-
-//    vector<TrackRef> m_tracks;
 	
 private:
 	

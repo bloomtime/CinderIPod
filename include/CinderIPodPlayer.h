@@ -28,6 +28,7 @@ public:
     void stop();
     void skipNext();
     void skipPrev();
+    // TODO seek
 
     void   setPlayheadTime(double time);
     double getPlayheadTime();

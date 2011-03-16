@@ -5,9 +5,6 @@ namespace cinder { namespace ipod {
 
 // TRACK
 
-//Track::Track()
-//{
-//}
 Track::Track(MPMediaItem *media_item)
 {
     m_media_item = [media_item retain];
@@ -75,18 +72,10 @@ Surface Track::getArtwork(const Vec2i &size)
 
 // PLAYLIST
 
-//Playlist::Playlist()
-//{
-//}
 Playlist::Playlist(MPMediaItemCollection *media_collection)
 {
 	m_collection = [media_collection retain];
 	m_representative_item = NULL;
-//	m_representative_item = [[m_collection representativeItem] retain];	
-//    NSArray *items = [media_collection items];
-//    for(MPMediaItem *item in items){
-//        pushTrack(new Track(item));
-//    }
 }
 Playlist::~Playlist()
 {
@@ -96,15 +85,6 @@ Playlist::~Playlist()
 	[m_collection release];
 }
 
-//void Playlist::pushTrack(TrackRef track)
-//{
-//    m_tracks.push_back(track);
-//}
-//void Playlist::pushTrack(Track *track)
-//{
-//    m_tracks.push_back(TrackRef(track));
-//}
-//
 string Playlist::getAlbumTitle()
 {
     return string([[getRepresentativeItem() valueForProperty: MPMediaItemPropertyAlbumTitle] UTF8String]);
@@ -118,26 +98,19 @@ string Playlist::getArtistName()
 MPMediaItem* Playlist::getRepresentativeItem()
 {
 	if (m_representative_item == NULL) {
-		std::cout << "getting representative item" << std::endl;
+		//std::cout << "getting representative item" << std::endl;
 		m_representative_item = [[m_collection representativeItem] retain];
 	}
-	else {
-		std::cout << "using cached representative item" << std::endl;		
-	}
+//	else {
+//		std::cout << "using cached representative item" << std::endl;		
+//	}
 	return m_representative_item;
 }
 
 MPMediaItemCollection* Playlist::getMediaItemCollection()
 {
 	return m_collection;
-//    NSMutableArray *items = [NSMutableArray array];
-//    for(Iter it = m_tracks.begin(); it != m_tracks.end(); ++it){
-//        [items addObject: (*it)->getMediaItem()];
-//    }
-//    return [MPMediaItemCollection collectionWithItems:items];
 }
-
-
 
 // IPOD
 
@@ -231,13 +204,6 @@ vector<PlaylistRef> getArtists()
 
 	std::cout << [start timeIntervalSinceNow] << " seconds to run query" << std::endl;
 	
-//	std::cout << "begin [query collectionSections]:" << std::endl;
-//	NSArray *sections = [query collectionSections];
-//	for (MPMediaQuerySection *section in sections) {
-//		std::cout << string([[section title] UTF8String]) << std::endl;
-//	}
-//	std::cout << "end [query collectionSections]." << std::endl;
-	
 	start = [NSDate date];
 	
     vector<PlaylistRef> artists;
@@ -249,19 +215,12 @@ vector<PlaylistRef> getArtists()
 
 	start = [NSDate date];
 
-//	NSSet *properties = [NSSet setWithObjects: MPMediaItemPropertyArtist, nil];
-//	for(MPMediaItemCollection *group in query_groups){
-//		[group enumerateValuesForProperties: properties usingBlock: ^(NSString *property, id value, BOOL *stop){
-//			// ... ?
-//		}];
-//    }
-
 	// TODO: off in a thread with you!?
-	for(int i = 0; i < [query_groups count]; i++) {
-		MPMediaItem *rItem = [[query_groups objectAtIndex:i] representativeItem];
-		//NSString *pID = [rItem valueForProperty:MPMediaItemPropertyPersistentID];
-		//NSString *title = [rItem valueForProperty:MPMediaItemPropertyAlbumTitle];
-		NSString *artist = [rItem valueForProperty:MPMediaItemPropertyArtist];
+    // loop over all items and pre-fetch the artist name
+    // this takes *much* longer than the initial query, sadly
+    for (vector<PlaylistRef>::iterator i = artists.begin(); i != artists.end(); i++) {
+        // fetches representative item and gets its artist name property:
+        (*i)->getArtistName();
 	}	
 	
 	std::cout << [start timeIntervalSinceNow] << " seconds to get artist names" << std::endl;
