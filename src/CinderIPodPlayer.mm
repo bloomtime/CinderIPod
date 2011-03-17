@@ -24,11 +24,11 @@ void Player::play( PlaylistRef playlist, const int index )
 {
     MPMediaItemCollection *collection = playlist->getMediaItemCollection();
 
-    [m_pod->m_controller stop];
-    [m_pod->m_controller setQueueWithItemCollection: collection];
-
-    if(index > 0 && index < playlist->size())
-        m_pod->m_controller.nowPlayingItem = [[collection items] objectAtIndex: index];
+    if(index >= 0 && index < [collection count]) {
+        [m_pod->m_controller stop];
+        [m_pod->m_controller setQueueWithItemCollection: collection];
+        [m_pod->m_controller setNowPlayingItem: [[collection items] objectAtIndex: index]];
+    }
 
 	[m_pod->m_controller play];
 }

@@ -5,15 +5,13 @@ namespace cinder { namespace ipod {
 
 // TRACK
 
-Track::Track()
-{
-}
 Track::Track(MPMediaItem *media_item)
 {
     m_media_item = [media_item retain];
 }
 Track::~Track()
 {
+    [m_media_item release];	
 }
 
 string Track::getTitle()
@@ -59,66 +57,60 @@ double Track::getLength()
 Surface Track::getArtwork(const Vec2i &size)
 {
     MPMediaItemArtwork *artwork = [m_media_item valueForProperty: MPMediaItemPropertyArtwork];
-    
-    if (artwork) {
-        UIImage *artwork_img = [artwork imageWithSize: CGSizeMake(size.x, size.y)];
-        if(artwork_img) {
-            return cocoa::convertUiImage(artwork_img, true);
-        }
-    }
+	
+	if (artwork) {
+		UIImage *artwork_img = [artwork imageWithSize: CGSizeMake(size.x, size.y)];
+		if(artwork_img) {
+			return cocoa::convertUiImage(artwork_img, true);
+		}
+	}
 
-    return Surface();
+	return Surface();
 }
 
 
 
 // PLAYLIST
 
-Playlist::Playlist()
-{
-}
 Playlist::Playlist(MPMediaItemCollection *media_collection)
 {
-    NSArray *items = [media_collection items];
-    for(MPMediaItem *item in items){
-        pushTrack(new Track(item));
-    }
+	m_collection = [media_collection retain];
+	m_representative_item = NULL;
 }
 Playlist::~Playlist()
 {
-}
-
-void Playlist::pushTrack(TrackRef track)
-{
-    m_tracks.push_back(track);
-}
-void Playlist::pushTrack(Track *track)
-{
-    m_tracks.push_back(TrackRef(track));
+	if (m_representative_item) {
+		[m_representative_item release];
+	}
+	[m_collection release];
 }
 
 string Playlist::getAlbumTitle()
 {
-    MPMediaItem *item = [getMediaItemCollection() representativeItem];
-    return string([[item valueForProperty: MPMediaItemPropertyAlbumTitle] UTF8String]);
+    return string([[getRepresentativeItem() valueForProperty: MPMediaItemPropertyAlbumTitle] UTF8String]);
 }
 
 string Playlist::getArtistName()
+{	
+    return string([[getRepresentativeItem() valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
+}
+	
+MPMediaItem* Playlist::getRepresentativeItem()
 {
-    MPMediaItem *item = [getMediaItemCollection() representativeItem];
-    return string([[item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
+	if (m_representative_item == NULL) {
+		//std::cout << "getting representative item" << std::endl;
+		m_representative_item = [[m_collection representativeItem] retain];
+	}
+//	else {
+//		std::cout << "using cached representative item" << std::endl;		
+//	}
+	return m_representative_item;
 }
 
 MPMediaItemCollection* Playlist::getMediaItemCollection()
 {
-    NSMutableArray *items = [NSMutableArray array];
-    for(Iter it = m_tracks.begin(); it != m_tracks.end(); ++it){
-        [items addObject: (*it)->getMediaItem()];
-    }
-    return [MPMediaItemCollection collectionWithItems:items];
+	return m_collection;
 }
-
-
 
 // IPOD
 
@@ -203,16 +195,36 @@ PlaylistRef getArtist(uint64_t artist_id)
 	
 vector<PlaylistRef> getArtists()
 {
+	std::cout << "ipod::getArtists()" << std::endl;
+	
+	NSDate *start = [NSDate date];
+
     MPMediaQuery *query = [MPMediaQuery artistsQuery];
-
-    vector<PlaylistRef> artists;
-
     NSArray *query_groups = [query collections];
+
+	std::cout << [start timeIntervalSinceNow] << " seconds to run query" << std::endl;
+	
+	start = [NSDate date];
+	
+    vector<PlaylistRef> artists;
     for(MPMediaItemCollection *group in query_groups){
-        PlaylistRef artist = PlaylistRef(new Playlist(group));
-        artists.push_back(artist);
+        artists.push_back(PlaylistRef(new Playlist(group)));
     }
 
+	std::cout << [start timeIntervalSinceNow] << " seconds to build playlist refs" << std::endl;
+
+	start = [NSDate date];
+
+	// TODO: off in a thread with you!?
+    // loop over all items and pre-fetch the artist name
+    // this takes *much* longer than the initial query, sadly
+    for (vector<PlaylistRef>::iterator i = artists.begin(); i != artists.end(); i++) {
+        // fetches representative item and gets its artist name property:
+        (*i)->getArtistName();
+	}	
+	
+	std::cout << [start timeIntervalSinceNow] << " seconds to get artist names" << std::endl;
+	
     return artists;
 }
 
