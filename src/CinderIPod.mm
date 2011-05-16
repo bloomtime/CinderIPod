@@ -266,4 +266,28 @@ vector<PlaylistRef> getArtists()
     return artists;
 }
 
+vector<PlaylistRef> getPlaylists()
+{
+    MPMediaQuery *query = [MPMediaQuery playlistsQuery];
+    
+    vector<PlaylistRef> playlists;
+    
+    // TODO: perhaps filter by the MPMediaPlaylistPropertyPlaylistAttributes property?
+//        enum {
+//            MPMediaPlaylistAttributeNone    = 0,
+//            MPMediaPlaylistAttributeOnTheGo = (1 << 0),
+//            MPMediaPlaylistAttributeSmart   = (1 << 1),
+//            MPMediaPlaylistAttributeGenius  = (1 << 2)
+//        };
+//    typedef NSInteger MPMediaPlaylistAttribute;    
+    
+    NSArray *query_groups = [query collections];
+    for(MPMediaItemCollection *group in query_groups){
+        PlaylistRef playlist = PlaylistRef(new Playlist(group));
+        playlists.push_back(playlist);
+    }
+    
+    return playlists;
+}
+    
 } } // namespace cinder::ipod

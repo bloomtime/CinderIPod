@@ -94,5 +94,6 @@ PlaylistRef         getArtist(uint64_t artist_id);
 vector<PlaylistRef> getAlbums();
 vector<PlaylistRef> getAlbumsWithArtist(const string &artist_name);
 vector<PlaylistRef> getArtists();
+vector<PlaylistRef> getPlaylists();
 
 } } // namespace cinder::ipod
