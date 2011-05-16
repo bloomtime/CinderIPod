@@ -27,7 +27,7 @@ void Player::play( PlaylistRef playlist, const int index )
     [m_pod->m_controller stop];
     [m_pod->m_controller setQueueWithItemCollection: collection];
 
-    if(index > 0 && index < playlist->size())
+    if(index >= 0 && index < playlist->size())
         m_pod->m_controller.nowPlayingItem = [[collection items] objectAtIndex: index];
 
 	[m_pod->m_controller play];
