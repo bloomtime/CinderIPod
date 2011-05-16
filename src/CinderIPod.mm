@@ -50,7 +50,41 @@ int Track::getStarRating()
 {
 	return [[m_media_item valueForProperty: MPMediaItemPropertyRating] intValue];
 }
-	
+double Track::getReleaseDate()
+{
+    return [[m_media_item valueForProperty: MPMediaItemPropertyReleaseDate] timeIntervalSince1970];
+}
+int Track::getReleaseYear()
+{
+    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
+    NSCalendar *gregorian = [[NSCalendar alloc]
+                             initWithCalendarIdentifier:NSGregorianCalendar];    
+    NSDateComponents *components = [gregorian components: NSYearCalendarUnit fromDate: date];
+    NSInteger year = [components year];
+    [gregorian release];
+    return year;
+}
+int Track::getReleaseMonth()
+{
+    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
+    NSCalendar *gregorian = [[NSCalendar alloc]
+                             initWithCalendarIdentifier:NSGregorianCalendar];    
+    NSDateComponents *components = [gregorian components: NSMonthCalendarUnit fromDate: date];
+    NSInteger year = [components year];
+    [gregorian release];
+    return year;
+}
+int Track::getReleaseDay()
+{
+    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
+    NSCalendar *gregorian = [[NSCalendar alloc]
+                             initWithCalendarIdentifier:NSGregorianCalendar];    
+    NSDateComponents *components = [gregorian components: NSDayCalendarUnit fromDate: date];
+    NSInteger year = [components year];
+    [gregorian release];
+    return year;
+}
+    
 double Track::getLength()
 {
     return [[m_media_item valueForProperty: MPMediaItemPropertyPlaybackDuration] doubleValue];
@@ -118,6 +152,14 @@ uint64_t Playlist::getArtistId()
     return [[item valueForProperty: MPMediaItemPropertyArtistPersistentID] longLongValue];
 }
     
+double Playlist::getTotalLength()
+{
+    double length = 0;
+    for(Iter it = m_tracks.begin(); it != m_tracks.end(); ++it){
+        length += (*it)->getLength();
+    }
+    return length;
+}    
     
 MPMediaItemCollection* Playlist::getMediaItemCollection()
 {
