@@ -107,6 +107,15 @@ Surface Track::getArtwork(const Vec2i &size)
 
 Playlist::Playlist()
 {
+    m_playlist_name = "Untitled";
+}
+Playlist::Playlist(MPMediaItemCollection *media_collection, string playlist_name)
+{
+    NSArray *items = [media_collection items];
+    for(MPMediaItem *item in items){
+        pushTrack(new Track(item));
+    }
+    m_playlist_name = playlist_name;
 }
 Playlist::Playlist(MPMediaItemCollection *media_collection)
 {
@@ -114,6 +123,7 @@ Playlist::Playlist(MPMediaItemCollection *media_collection)
     for(MPMediaItem *item in items){
         pushTrack(new Track(item));
     }
+    m_playlist_name = "Untitled";
 }
 Playlist::~Playlist()
 {
@@ -138,6 +148,11 @@ string Playlist::getArtistName()
 {
     MPMediaItem *item = [getMediaItemCollection() representativeItem];
     return string([[item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
+}
+    
+string Playlist::getPlaylistName()
+{
+    return m_playlist_name;
 }
 
 uint64_t Playlist::getAlbumId()
@@ -283,8 +298,8 @@ vector<PlaylistRef> getPlaylists()
     
     NSArray *query_groups = [query collections];
     for(MPMediaItemCollection *group in query_groups){
-        PlaylistRef playlist = PlaylistRef(new Playlist(group));
-        playlists.push_back(playlist);
+        string name = string([[group valueForProperty: MPMediaPlaylistPropertyName] UTF8String]);
+        playlists.push_back(PlaylistRef(new Playlist(group, name)));
     }
     
     return playlists;

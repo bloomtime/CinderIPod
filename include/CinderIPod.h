@@ -59,6 +59,7 @@ public:
     typedef vector<TrackRef>::iterator Iter;
 
     Playlist();
+    Playlist(MPMediaItemCollection *collection, string playlist_name);
     Playlist(MPMediaItemCollection *collection);
     ~Playlist();
 
@@ -68,6 +69,7 @@ public:
 
     string getAlbumTitle();
     string getArtistName();
+    string getPlaylistName();
     uint64_t getAlbumId();
     uint64_t getArtistId();
     double getTotalLength();
@@ -82,6 +84,7 @@ public:
     MPMediaItemCollection* getMediaItemCollection();
 
     vector<TrackRef> m_tracks;
+    string m_playlist_name;
 
 };
 
