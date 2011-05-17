@@ -33,10 +33,10 @@ public:
     int      getPlayCount();
     int      getStarRating();
     double   getLength();
-    double   getReleaseDate();  // seconds since 1970
+//    double   getReleaseDate();  // seconds since 1970
     int      getReleaseYear();  // four digit year, e.g. 2011, 1992
-    int      getReleaseMonth(); // 1-12 (not 0-11 like Java!)
-    int      getReleaseDay();   // 1-31
+//    int      getReleaseMonth(); // 1-12 (not 0-11 like Java!)
+//    int      getReleaseDay();   // 1-31
 
     Surface getArtwork(const Vec2i &size);
 

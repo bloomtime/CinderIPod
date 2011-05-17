@@ -50,40 +50,52 @@ int Track::getStarRating()
 {
 	return [[m_media_item valueForProperty: MPMediaItemPropertyRating] intValue];
 }
-double Track::getReleaseDate()
-{
-    return [[m_media_item valueForProperty: MPMediaItemPropertyReleaseDate] timeIntervalSince1970];
-}
+//double Track::getReleaseDate()
+//{
+//    return [[m_media_item valueForProperty: MPMediaItemPropertyReleaseDate] timeIntervalSince1970];
+//}
 int Track::getReleaseYear()
 {
-    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
-    NSCalendar *gregorian = [[NSCalendar alloc]
-                             initWithCalendarIdentifier:NSGregorianCalendar];    
-    NSDateComponents *components = [gregorian components: NSYearCalendarUnit fromDate: date];
-    NSInteger year = [components year];
-    [gregorian release];
-    return year;
+//    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
+//    NSCalendar *gregorian = [[NSCalendar alloc]
+//                             initWithCalendarIdentifier:NSGregorianCalendar];    
+//    NSDateComponents *components = [gregorian components: NSYearCalendarUnit fromDate: date];
+//    NSInteger year = [components year];
+//    std::cout << getTitle() << " released " << year << std::endl;
+//    [gregorian release];
+//    return year;
+    // I kiss you http://stackoverflow.com/questions/4862646/get-album-year-for-item-in-ipod-library
+    NSNumber *yearNumber = [m_media_item valueForProperty:@"year"];
+    if (yearNumber && [yearNumber isKindOfClass:[NSNumber class]])
+    {
+        int year = [yearNumber intValue];
+        if (year != 0)
+        {
+            return year;
+        }
+    }    
+    return -1;
 }
-int Track::getReleaseMonth()
-{
-    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
-    NSCalendar *gregorian = [[NSCalendar alloc]
-                             initWithCalendarIdentifier:NSGregorianCalendar];    
-    NSDateComponents *components = [gregorian components: NSMonthCalendarUnit fromDate: date];
-    NSInteger year = [components year];
-    [gregorian release];
-    return year;
-}
-int Track::getReleaseDay()
-{
-    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
-    NSCalendar *gregorian = [[NSCalendar alloc]
-                             initWithCalendarIdentifier:NSGregorianCalendar];    
-    NSDateComponents *components = [gregorian components: NSDayCalendarUnit fromDate: date];
-    NSInteger year = [components year];
-    [gregorian release];
-    return year;
-}
+//int Track::getReleaseMonth()
+//{
+//    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
+//    NSCalendar *gregorian = [[NSCalendar alloc]
+//                             initWithCalendarIdentifier:NSGregorianCalendar];    
+//    NSDateComponents *components = [gregorian components: NSMonthCalendarUnit fromDate: date];
+//    NSInteger year = [components year];
+//    [gregorian release];
+//    return year;
+//}
+//int Track::getReleaseDay()
+//{
+//    NSDate *date = [m_media_item valueForProperty: MPMediaItemPropertyReleaseDate];
+//    NSCalendar *gregorian = [[NSCalendar alloc]
+//                             initWithCalendarIdentifier:NSGregorianCalendar];    
+//    NSDateComponents *components = [gregorian components: NSDayCalendarUnit fromDate: date];
+//    NSInteger year = [components year];
+//    [gregorian release];
+//    return year;
+//}
     
 double Track::getLength()
 {
