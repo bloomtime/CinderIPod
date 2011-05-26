@@ -28,7 +28,10 @@ string Track::getArtist()
 {
     return string([[m_media_item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
 }
-
+string Track::getAlbumArtist()
+{
+	return string([[m_media_item valueForProperty: MPMediaItemPropertyAlbumArtist] UTF8String]);
+}
 uint64_t Track::getAlbumId()
 {
     return [[m_media_item valueForProperty: MPMediaItemPropertyAlbumPersistentID] longLongValue];
@@ -46,10 +49,12 @@ int Track::getPlayCount()
 {
 	return [[m_media_item valueForProperty: MPMediaItemPropertyPlayCount] intValue];
 }
+	
 int Track::getStarRating()
 {
 	return [[m_media_item valueForProperty: MPMediaItemPropertyRating] intValue];
 }
+	
 //double Track::getReleaseDate()
 //{
 //    return [[m_media_item valueForProperty: MPMediaItemPropertyReleaseDate] timeIntervalSince1970];
@@ -149,6 +154,12 @@ void Playlist::pushTrack(Track *track)
 {
     m_tracks.push_back(TrackRef(track));
 }
+	
+string Playlist::getGenre()
+{
+	MPMediaItem *item = [getMediaItemCollection() representativeItem];
+	return string([[item valueForProperty: MPMediaItemPropertyGenre] UTF8String]);
+}
 
 string Playlist::getAlbumTitle()
 {
@@ -160,6 +171,12 @@ string Playlist::getArtistName()
 {
     MPMediaItem *item = [getMediaItemCollection() representativeItem];
     return string([[item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
+}
+	
+string Playlist::getAlbumArtistName()
+{
+	MPMediaItem *item = [getMediaItemCollection() representativeItem];
+	return string([[item valueForProperty: MPMediaItemPropertyAlbumArtist] UTF8String]);
 }
     
 string Playlist::getPlaylistName()

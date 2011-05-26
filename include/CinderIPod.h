@@ -25,6 +25,7 @@ public:
     string   getTitle();
     string   getAlbumTitle();
     string   getArtist();
+	string	 getAlbumArtist();
 
     uint64_t getAlbumId();
     uint64_t getArtistId();
@@ -67,8 +68,10 @@ public:
     void pushTrack(Track *track);
     void popLastTrack(){ m_tracks.pop_back(); };
 
+	string getGenre();
     string getAlbumTitle();
     string getArtistName();
+	string getAlbumArtistName();
     string getPlaylistName();
     uint64_t getAlbumId();
     uint64_t getArtistId();
