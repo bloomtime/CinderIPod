@@ -17,6 +17,20 @@ public:
         StateSeekingBackward = MPMusicPlaybackStateSeekingBackward
     };
 
+    enum ShuffleMode {
+        ShuffleModeDefault = MPMusicShuffleModeDefault, 
+        ShuffleModeOff     = MPMusicShuffleModeOff, 
+        ShuffleModeSongs   = MPMusicShuffleModeSongs, 
+        ShuffleModeAlbums  = MPMusicShuffleModeAlbums        
+    };    
+    
+    enum RepeatMode {
+        RepeatModeDefault = MPMusicRepeatModeDefault, 
+        RepeatModeNone    = MPMusicRepeatModeNone, 
+        RepeatModeOne     = MPMusicRepeatModeOne, 
+        RepeatModeAll     = MPMusicRepeatModeAll
+    };
+    
     Player();
     ~Player();
 
@@ -32,9 +46,11 @@ public:
     void   setPlayheadTime(double time);
     double getPlayheadTime();
 
-    void setShuffleSongs();
-    void setShuffleAlbums();
-    void setShuffleOff();
+    void        setShuffleMode(ShuffleMode mode);
+    ShuffleMode getShuffleMode();
+    
+    void       setRepeatMode(RepeatMode mode);
+    RepeatMode getRepeatMode();
 
     bool hasPlayingTrack();
     TrackRef getPlayingTrack();
