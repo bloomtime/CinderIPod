@@ -76,20 +76,25 @@ void Player::skipPrev()
 	}
 }
 
+void Player::setShuffleMode(ShuffleMode mode)
+{
+    [m_pod->m_controller setShuffleMode: MPMusicShuffleMode(mode)];
+}
+Player::ShuffleMode Player::getShuffleMode()
+{
+    return ShuffleMode(m_pod->m_controller.shuffleMode);
+}    
+    
+void Player::setRepeatMode(RepeatMode mode)
+{
+    [m_pod->m_controller setRepeatMode: MPMusicRepeatMode(mode)];
+}
+Player::RepeatMode Player::getRepeatMode()
+{
+    return RepeatMode(m_pod->m_controller.repeatMode);    
+}
 
-void Player::setShuffleSongs()
-{
-    [m_pod->m_controller setShuffleMode: MPMusicShuffleModeSongs];
-}
-void Player::setShuffleAlbums()
-{
-    [m_pod->m_controller setShuffleMode: MPMusicShuffleModeAlbums];
-}
-void Player::setShuffleOff()
-{
-    [m_pod->m_controller setShuffleMode: MPMusicShuffleModeOff];
-}
-
+    
 bool Player::hasPlayingTrack()
 {
     return m_pod->m_controller.nowPlayingItem != Nil;
