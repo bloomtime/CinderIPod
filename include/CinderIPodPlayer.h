@@ -56,6 +56,8 @@ public:
     TrackRef getPlayingTrack();
     State    getPlayState();
 
+    string getPlayStateString();
+        
     template<typename T>
     CallbackId registerTrackChanged( T *obj, bool (T::*callback)(Player*) ){
         return m_pod->m_cb_track_change.registerCb(std::bind1st(std::mem_fun(callback), obj));

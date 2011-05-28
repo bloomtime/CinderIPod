@@ -110,5 +110,24 @@ Player::State Player::getPlayState()
     return State(m_pod->m_controller.playbackState);
 }
 
+string Player::getPlayStateString()
+{
+    switch(getPlayState()) {
+        case Player::StateStopped:
+            return "Stopped";
+        case Player::StatePlaying:
+            return "Playing";
+        case Player::StatePaused:
+            return "Paused";
+        case Player::StateInterrupted:
+            return "Interrupted";
+        case Player::StateSeekingForward:
+            return "Seeking Forward";
+        case Player::StateSeekingBackward:
+            return "Seeking Backward";
+    }    
+    return "Unknown Player State";
+}
+    
 
 } } // namespace cinder::ipod
