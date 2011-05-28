@@ -72,7 +72,7 @@ void Player::skipPrev()
 	if( getPlayheadTime() < 3.0f ){
 		[m_pod->m_controller skipToPreviousItem];
 	} else {
-		setPlayheadTime( 0.0 );
+		[m_pod->m_controller skipToBeginning];
 	}
 }
 
