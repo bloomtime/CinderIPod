@@ -224,7 +224,7 @@ PlaylistRef getAllTracks()
     return PlaylistRef(new Playlist(tracks));
 }
 
-PlaylistRef getAlbum(uint64_t album_id)
+PlaylistRef getAlbum(const uint64_t &album_id)
 {
     MPMediaQuery *query = [[MPMediaQuery alloc] init];
     [query addFilterPredicate: [MPMediaPropertyPredicate
@@ -279,7 +279,31 @@ vector<PlaylistRef> getAlbumsWithArtist(const string &artist_name)
     return albums;
 }
 
-PlaylistRef getArtist(uint64_t artist_id)
+vector<PlaylistRef> getAlbumsWithArtistId(const uint64_t &artist_id)
+{
+    MPMediaQuery *query = [[MPMediaQuery alloc] init];
+    [query addFilterPredicate: [MPMediaPropertyPredicate
+                                predicateWithValue: [NSNumber numberWithInteger: MPMediaTypeMusic]
+                                forProperty: MPMediaItemPropertyMediaType
+                                ]];
+	[query addFilterPredicate: [MPMediaPropertyPredicate
+								predicateWithValue: [NSNumber numberWithUnsignedLongLong: artist_id]
+								forProperty: MPMediaItemPropertyArtistPersistentID
+								]];
+    [query setGroupingType: MPMediaGroupingAlbum];
+    
+    vector<PlaylistRef> albums;
+    
+    NSArray *query_groups = [query collections];
+    for(MPMediaItemCollection *group in query_groups){
+        PlaylistRef album = PlaylistRef(new Playlist(group));
+        albums.push_back(album);
+    }
+    
+    return albums;
+}
+    
+PlaylistRef getArtist(const uint64_t &artist_id)
 {
 	MPMediaQuery *query = [[MPMediaQuery alloc] init];
 	[query addFilterPredicate: [MPMediaPropertyPredicate

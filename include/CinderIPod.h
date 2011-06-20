@@ -94,10 +94,11 @@ public:
 typedef std::shared_ptr<Playlist> PlaylistRef;
 
 PlaylistRef         getAllTracks();
-PlaylistRef         getAlbum(uint64_t album_id);
-PlaylistRef         getArtist(uint64_t artist_id);
+PlaylistRef         getAlbum(const uint64_t &album_id);
+PlaylistRef         getArtist(const uint64_t &artist_id);
 vector<PlaylistRef> getAlbums();
 vector<PlaylistRef> getAlbumsWithArtist(const string &artist_name);
+vector<PlaylistRef> getAlbumsWithArtistId(const uint64_t &artist_id);
 vector<PlaylistRef> getArtists();
 vector<PlaylistRef> getPlaylists();
     
