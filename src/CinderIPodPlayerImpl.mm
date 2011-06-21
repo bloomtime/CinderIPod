@@ -12,6 +12,8 @@
     m_controller = [MPMusicPlayerController iPodMusicPlayer];
     m_library = [MPMediaLibrary defaultMediaLibrary];
     
+    m_suppress_events = false;
+    
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     
     [nc addObserver: self
@@ -45,17 +47,20 @@
 
 - (void)onStateChanged:(NSNotification *)notification
 {
-    m_cb_state_change.call(m_player);
+    if (!m_suppress_events)
+        m_cb_state_change.call(m_player);
 }
 
 - (void)onTrackChanged:(NSNotification *)notification
 {
-    m_cb_track_change.call(m_player);
+    if (!m_suppress_events)
+        m_cb_track_change.call(m_player);
 }
 
 - (void)onLibraryChanged:(NSNotification *)notification
 {
-    m_cb_library_change.call(m_player);
+    if (!m_suppress_events)
+        m_cb_library_change.call(m_player);
 }
 
 @end

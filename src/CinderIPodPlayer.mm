@@ -22,15 +22,29 @@ Player::~Player()
 
 void Player::play( PlaylistRef playlist, const int index )
 {
+    m_pod->m_suppress_events = true;
+
     MPMediaItemCollection *collection = playlist->getMediaItemCollection();
 
-    [m_pod->m_controller stop];
-    [m_pod->m_controller setQueueWithItemCollection: collection];
+    bool play = false;
+    
+    if (m_current_playlist != playlist) {
+        play = true;
+        m_current_playlist = playlist;
 
-    if(index >= 0 && index < playlist->size())
+        [m_pod->m_controller stop];
+        [m_pod->m_controller setQueueWithItemCollection: collection];
+    }
+
+    if(index >= 0 && index < playlist->size()) {
         m_pod->m_controller.nowPlayingItem = [[collection items] objectAtIndex: index];
+    }
 
-	[m_pod->m_controller play];
+    m_pod->m_suppress_events = false;
+    
+    if (play) {
+        [m_pod->m_controller play];
+    }
 }
 
 void Player::play( PlaylistRef playlist )
@@ -58,7 +72,7 @@ void Player::setPlayheadTime(double time)
 }
 double Player::getPlayheadTime()
 {
-    return m_pod->m_controller.currentPlaybackTime;
+    return m_pod->m_controller.currentPlaybackTime ? m_pod->m_controller.currentPlaybackTime : 0.0;
 }
 
 

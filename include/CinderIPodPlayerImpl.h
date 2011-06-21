@@ -17,6 +17,8 @@ namespace cinder { namespace ipod {
 
     cinder::ipod::Player    *m_player;
 
+    bool m_suppress_events;
+    
     cinder::CallbackMgr<bool(cinder::ipod::Player*)> m_cb_state_change;
     cinder::CallbackMgr<bool(cinder::ipod::Player*)> m_cb_track_change;
     cinder::CallbackMgr<bool(cinder::ipod::Player*)> m_cb_library_change;

@@ -75,6 +75,11 @@ protected:
 
     CinderIPodPlayerImpl *m_pod;
 
+    // only set if we've called play(playlist,index)
+    // but the ipod player could have been setup outside of this app
+    // so you can't always know the current playlist
+    // (this is changing in iOS 5)
+    PlaylistRef m_current_playlist;
 };
 
 } } // namespace cinder::ipod
