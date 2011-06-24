@@ -26,7 +26,7 @@ void Player::play( PlaylistRef playlist, const int index )
 
     MPMediaItemCollection *collection = playlist->getMediaItemCollection();
 
-    bool play = false;
+    bool play = (getPlayState() != Player::StatePlaying);
     
     if (m_current_playlist != playlist) {
         play = true;
