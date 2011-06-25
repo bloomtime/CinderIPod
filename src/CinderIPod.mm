@@ -172,7 +172,7 @@ string Playlist::getArtistName()
     MPMediaItem *item = [getMediaItemCollection() representativeItem];
     return string([[item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
 }
-	
+    	
 string Playlist::getAlbumArtistName()
 {
 	MPMediaItem *item = [getMediaItemCollection() representativeItem];
@@ -321,11 +321,19 @@ PlaylistRef getArtist(const uint64_t &artist_id)
 	
 vector<PlaylistRef> getArtists()
 {
+    vector<PlaylistRef> artists;
+    
     MPMediaQuery *query = [MPMediaQuery artistsQuery];
 
-    vector<PlaylistRef> artists;
-
+//	MPMediaQuery *query = [[MPMediaQuery alloc] init];
+//	[query addFilterPredicate: [MPMediaPropertyPredicate
+//								predicateWithValue: [NSNumber numberWithInteger: MPMediaTypeMusic]
+//								forProperty: MPMediaItemPropertyMediaType
+//								]];
+//	[query setGroupingType: MPMediaGroupingAlbumArtist];    
+    
     NSArray *query_groups = [query collections];
+    
     for(MPMediaItemCollection *group in query_groups){
         PlaylistRef artist = PlaylistRef(new Playlist(group));
         artists.push_back(artist);
