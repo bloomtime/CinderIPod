@@ -58,6 +58,10 @@ public:
 
     string getPlayStateString();
         
+    // dangerous, sorry: we only know this if it was set within our own app first, 
+    // otherwise you have to just deal with it (maybe til iOS 5)
+    PlaylistRef getCurrentPlaylist() { return m_current_playlist; }
+    
     template<typename T>
     CallbackId registerTrackChanged( T *obj, bool (T::*callback)(Player*) ){
         return m_pod->m_cb_track_change.registerCb(std::bind1st(std::mem_fun(callback), obj));
