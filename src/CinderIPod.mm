@@ -319,7 +319,7 @@ PlaylistRef getArtist(const uint64_t &artist_id)
 	return PlaylistRef(new Playlist(group));
 }
 	
-vector<PlaylistRef> getArtists()
+vector<PlaylistRef> getArtists( std::function<void(float)> progress )
 {
     vector<PlaylistRef> artists;
     
@@ -334,15 +334,20 @@ vector<PlaylistRef> getArtists()
     
     NSArray *query_groups = [query collections];
     
+    int count = [query_groups count];
+    int num = 0;
+    
     for(MPMediaItemCollection *group in query_groups){
         PlaylistRef artist = PlaylistRef(new Playlist(group));
         artists.push_back(artist);
+        progress( (float)num / (float)count );
+        num++;
     }
 
     return artists;
 }
 
-vector<PlaylistRef> getPlaylists()
+vector<PlaylistRef> getPlaylists( std::function<void(float)> progress )
 {
     MPMediaQuery *query = [MPMediaQuery playlistsQuery];
     
@@ -358,9 +363,14 @@ vector<PlaylistRef> getPlaylists()
 //    typedef NSInteger MPMediaPlaylistAttribute;    
     
     NSArray *query_groups = [query collections];
+    int count = [query_groups count];
+    int num = 0;
+    
     for(MPMediaItemCollection *group in query_groups){
         string name = string([[group valueForProperty: MPMediaPlaylistPropertyName] UTF8String]);
         playlists.push_back(PlaylistRef(new Playlist(group, name)));
+        progress( (float)num / (float)count );
+        num++;
     }
     
     return playlists;

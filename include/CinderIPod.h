@@ -2,6 +2,7 @@
 
 #include "cinder/Cinder.h"
 #include "cinder/Surface.h"
+#include "cinder/Function.h"
 #include "cinder/cocoa/CinderCocoaTouch.h"
 
 #include <MediaPlayer/MediaPlayer.h>
@@ -99,7 +100,7 @@ PlaylistRef         getArtist(const uint64_t &artist_id);
 vector<PlaylistRef> getAlbums();
 vector<PlaylistRef> getAlbumsWithArtist(const string &artist_name);
 vector<PlaylistRef> getAlbumsWithArtistId(const uint64_t &artist_id);
-vector<PlaylistRef> getArtists();
-vector<PlaylistRef> getPlaylists();
+vector<PlaylistRef> getArtists( std::function<void(float)> progress );
+vector<PlaylistRef> getPlaylists( std::function<void(float)> progress );
     
 } } // namespace cinder::ipod
