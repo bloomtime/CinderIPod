@@ -100,6 +100,7 @@ PlaylistRef         getArtist(const uint64_t &artist_id);
 vector<PlaylistRef> getAlbums();
 vector<PlaylistRef> getAlbumsWithArtist(const string &artist_name);
 vector<PlaylistRef> getAlbumsWithArtistId(const uint64_t &artist_id);
+PlaylistRef         getAlbumPlaylistWithArtistId(const uint64_t &artist_id);
 vector<PlaylistRef> getArtists( std::function<void(float)> progress );
 vector<PlaylistRef> getPlaylists( std::function<void(float)> progress );
     

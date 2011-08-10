@@ -302,6 +302,32 @@ vector<PlaylistRef> getAlbumsWithArtistId(const uint64_t &artist_id)
     
     return albums;
 }
+  
+PlaylistRef getAlbumPlaylistWithArtistId(const uint64_t &artist_id)
+{
+    MPMediaQuery *query = [[MPMediaQuery alloc] init];
+    [query addFilterPredicate: [MPMediaPropertyPredicate
+                                predicateWithValue: [NSNumber numberWithInteger: MPMediaTypeMusic]
+                                forProperty: MPMediaItemPropertyMediaType
+                                ]];
+    [query addFilterPredicate: [MPMediaPropertyPredicate
+                                predicateWithValue: [NSNumber numberWithUnsignedLongLong: artist_id]
+                                forProperty: MPMediaItemPropertyArtistPersistentID
+                                ]];
+    [query setGroupingType: MPMediaGroupingAlbum];
+    
+    PlaylistRef album = PlaylistRef(new Playlist());
+    
+    NSArray *query_groups = [query collections];
+    for(MPMediaItemCollection *group in query_groups){
+        NSArray *items = [group items];
+        for(MPMediaItem *item in items){
+            album->pushTrack(new Track(item));
+        }
+    }
+    
+    return album;
+}    
     
 PlaylistRef getArtist(const uint64_t &artist_id)
 {
