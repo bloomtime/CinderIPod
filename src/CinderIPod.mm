@@ -122,25 +122,14 @@ Surface Track::getArtwork(const Vec2i &size)
 
 // PLAYLIST
 
-Playlist::Playlist()
-{
-    m_playlist_name = "Untitled";
-}
-Playlist::Playlist(MPMediaItemCollection *media_collection, string playlist_name)
+Playlist::Playlist(): m_artist_name_cached(false), m_playlist_name("Untitled") { }
+
+Playlist::Playlist(MPMediaItemCollection *media_collection, string playlist_name): m_artist_name_cached(false), m_playlist_name(playlist_name)
 {
     NSArray *items = [media_collection items];
     for(MPMediaItem *item in items){
         pushTrack(new Track(item));
     }
-    m_playlist_name = playlist_name;
-}
-Playlist::Playlist(MPMediaItemCollection *media_collection)
-{
-    NSArray *items = [media_collection items];
-    for(MPMediaItem *item in items){
-        pushTrack(new Track(item));
-    }
-    m_playlist_name = "Untitled";
 }
 Playlist::~Playlist()
 {
@@ -169,8 +158,12 @@ string Playlist::getAlbumTitle()
 
 string Playlist::getArtistName()
 {
-    MPMediaItem *item = [getMediaItemCollection() representativeItem];
-    return string([[item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
+    if (!m_artist_name_cached) {
+        MPMediaItem *item = [getMediaItemCollection() representativeItem];
+        m_artist_name = string([[item valueForProperty: MPMediaItemPropertyArtist] UTF8String]);
+        m_artist_name_cached = true;
+    }
+    return m_artist_name;
 }
     	
 string Playlist::getAlbumArtistName()

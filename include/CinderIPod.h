@@ -61,8 +61,7 @@ public:
     typedef vector<TrackRef>::iterator Iter;
 
     Playlist();
-    Playlist(MPMediaItemCollection *collection, string playlist_name);
-    Playlist(MPMediaItemCollection *collection);
+    Playlist(MPMediaItemCollection *collection, string playlist_name="Untitled");
     ~Playlist();
 
     void pushTrack(TrackRef track);
@@ -87,8 +86,12 @@ public:
 
     MPMediaItemCollection* getMediaItemCollection();
 
+protected:
+    
     vector<TrackRef> m_tracks;
     string m_playlist_name;
+    string m_artist_name;
+    bool m_artist_name_cached;
 
 };
 
