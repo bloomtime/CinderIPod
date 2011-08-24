@@ -5,10 +5,10 @@ namespace cinder { namespace ipod {
 
 // TRACK
 
-Track::Track()
+Track::Track(): m_artist_id_cached(false), m_album_id_cached(false), m_id_cached(false)
 {
 }
-Track::Track(MPMediaItem *media_item)
+Track::Track(MPMediaItem *media_item): m_artist_id_cached(false), m_album_id_cached(false), m_id_cached(false)
 {
     m_media_item = [media_item retain];
 }
@@ -34,15 +34,27 @@ string Track::getAlbumArtist()
 }
 uint64_t Track::getAlbumId()
 {
-    return [[m_media_item valueForProperty: MPMediaItemPropertyAlbumPersistentID] longLongValue];
+    if (!m_album_id_cached) {
+        m_album_id = [[m_media_item valueForProperty: MPMediaItemPropertyAlbumPersistentID] longLongValue];
+        m_album_id_cached = true;
+    }
+    return m_album_id;
 }
 uint64_t Track::getArtistId()
 {
-    return [[m_media_item valueForProperty: MPMediaItemPropertyArtistPersistentID] longLongValue];
+    if (!m_artist_id_cached) {
+        m_artist_id = [[m_media_item valueForProperty: MPMediaItemPropertyArtistPersistentID] longLongValue];
+        m_artist_id_cached = true;
+    }
+    return m_artist_id;
 }
 uint64_t Track::getItemId()
 {
-    return [[m_media_item valueForProperty: MPMediaItemPropertyPersistentID] longLongValue];
+    if (!m_id_cached) {
+        m_id = [[m_media_item valueForProperty: MPMediaItemPropertyPersistentID] longLongValue];
+        m_id_cached = true;
+    }
+    return m_id;
 }
 
 int Track::getPlayCount()
@@ -122,9 +134,9 @@ Surface Track::getArtwork(const Vec2i &size)
 
 // PLAYLIST
 
-Playlist::Playlist(): m_artist_name_cached(false), m_playlist_name("Untitled") { }
+Playlist::Playlist(): m_artist_name_cached(false), m_artist_id_cached(false), m_playlist_name("Untitled") { }
 
-Playlist::Playlist(MPMediaItemCollection *media_collection, string playlist_name): m_artist_name_cached(false), m_playlist_name(playlist_name)
+Playlist::Playlist(MPMediaItemCollection *media_collection, string playlist_name): m_artist_name_cached(false), m_artist_id_cached(false), m_playlist_name(playlist_name)
 {
     NSArray *items = [media_collection items];
     for(MPMediaItem *item in items){
@@ -185,8 +197,12 @@ uint64_t Playlist::getAlbumId()
     
 uint64_t Playlist::getArtistId()
 {
-    MPMediaItem *item = [getMediaItemCollection() representativeItem];
-    return [[item valueForProperty: MPMediaItemPropertyArtistPersistentID] longLongValue];
+    if (!m_artist_id_cached) {
+        MPMediaItem *item = [getMediaItemCollection() representativeItem];
+        m_artist_id = [[item valueForProperty: MPMediaItemPropertyArtistPersistentID] longLongValue];
+        m_artist_id_cached = true;
+    }
+    return m_artist_id;
 }
     
 double Playlist::getTotalLength()

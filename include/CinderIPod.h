@@ -49,6 +49,15 @@ public:
 protected:
 
     MPMediaItem *m_media_item;
+    
+    uint64_t m_artist_id;
+    bool m_artist_id_cached;
+
+    uint64_t m_album_id;
+    bool m_album_id_cached;
+
+    uint64_t m_id;
+    bool m_id_cached;
 
 };
 
@@ -90,8 +99,12 @@ protected:
     
     vector<TrackRef> m_tracks;
     string m_playlist_name;
+
     string m_artist_name;
     bool m_artist_name_cached;
+    
+    uint64_t m_artist_id;
+    bool m_artist_id_cached;
 
 };
 
