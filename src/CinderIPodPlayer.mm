@@ -1,4 +1,5 @@
 #include "CinderIPodPlayer.h"
+#include <cmath> // for isnan :(
 
 namespace cinder { namespace ipod {
 
@@ -72,7 +73,10 @@ void Player::setPlayheadTime(double time)
 }
 double Player::getPlayheadTime()
 {
-    return m_pod->m_controller.currentPlaybackTime ? m_pod->m_controller.currentPlaybackTime : 0.0;
+    if (!std::isnan(m_pod->m_controller.currentPlaybackTime)) {
+        return m_pod->m_controller.currentPlaybackTime;
+    }
+    return 0.0;
 }
 
 
