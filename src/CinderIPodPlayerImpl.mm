@@ -47,8 +47,22 @@
 
 - (void)onStateChanged:(NSNotification *)notification
 {
-    if (!m_suppress_events)
+    static NSString * const stateKey = @"MPMusicPlayerControllerPlaybackStateKey";
+    NSNumber *number = [[notification userInfo] objectForKey:stateKey];
+    MPMusicPlaybackState state = [number integerValue];
+    // state is the new state
+    // MPMusicPlayerController *player = [notification object];
+    // state may not be equal to player.playbackState
+    
+    std::cout << "CinderIPod onStateChanged" << std::endl;
+    std::cout << "new state = " << state << std::endl;
+    
+    if (!m_suppress_events) {
+        std::cout << "dispatching callback" << std::endl;
         m_cb_state_change.call(m_player);
+    }
+    
+    std::cout << std::endl;        
 }
 
 - (void)onTrackChanged:(NSNotification *)notification

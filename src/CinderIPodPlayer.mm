@@ -27,15 +27,17 @@ void Player::play( PlaylistRef playlist, const int index )
 
     MPMediaItemCollection *collection = playlist->getMediaItemCollection();
 
-    bool play = (getPlayState() != Player::StatePlaying);
+//    bool play = (getPlayState() != Player::StatePlaying);
     
-    if (m_current_playlist != playlist) {
-        play = true;
+    [m_pod->m_controller play]; // iOS 5 hack
+    
+//    if (m_current_playlist != playlist) {
+//        play = true;
         m_current_playlist = playlist;
 
         [m_pod->m_controller stop];
         [m_pod->m_controller setQueueWithItemCollection: collection];
-    }
+//    }
 
     if(index >= 0 && index < playlist->size()) {
         m_pod->m_controller.nowPlayingItem = [[collection items] objectAtIndex: index];
@@ -43,9 +45,9 @@ void Player::play( PlaylistRef playlist, const int index )
 
     m_pod->m_suppress_events = false;
     
-    if (play) {
+//    if (play) {
         [m_pod->m_controller play];
-    }
+//    }
 }
 
 void Player::play( PlaylistRef playlist )
@@ -55,10 +57,12 @@ void Player::play( PlaylistRef playlist )
 
 void Player::play() 
 {
+    [m_pod->m_controller pause]; // iOS 5 hack
 	[m_pod->m_controller play];
 }
 void Player::pause() 
 {
+    [m_pod->m_controller play]; // iOS 5 hack
 	[m_pod->m_controller pause];
 }
 void Player::stop()
@@ -125,7 +129,7 @@ TrackRef Player::getPlayingTrack()
 
 Player::State Player::getPlayState()
 {
-    return State(m_pod->m_controller.playbackState);
+    return State( [m_pod->m_controller playbackState] );
 }
 
 string Player::getPlayStateString()
